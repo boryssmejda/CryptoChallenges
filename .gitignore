@@ -3,4 +3,4 @@ build/
 .vs/
 install/
 __pycache__/
-
+3rd_party/
