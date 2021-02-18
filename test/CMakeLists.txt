@@ -11,7 +11,9 @@ cmake_minimum_required(VERSION 3.18)
 
     target_link_libraries(cryptoTests
         PRIVATE
-            crypto::hexAndBase64Converter_test
+            $<TARGET_OBJECTS:crypto::hexAndBase64Converter_test>
+            crypto::hexAndBase64Converter
+            spdlog
             gtest
             gmock
             gtest_main

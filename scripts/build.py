@@ -10,5 +10,7 @@ if __name__ == "__main__":
     if CONFIGURATION not in ['Release', 'Debug']:
         raise ValueError(f"Unknown Configuration: {CONFIGURATION}")
 
-    cmake_command = ['cmake', '--build', pp.BUILD_DIR, '--config', CONFIGURATION]
+    cmake_command = ['cmake', '--build', pp.BUILD_DIR,
+                            '--parallel', '4',
+                            '--config', CONFIGURATION,]
     subprocess.run(cmake_command)
