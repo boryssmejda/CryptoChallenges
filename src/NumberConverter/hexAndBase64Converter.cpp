@@ -75,32 +75,6 @@ static const std::unordered_map<std::string, const char> BINARY_TO_BASE64_SYMBOL
      {"110111", '3'}, {"111000", '4'}, {"111001", '5'}, {"111010", '6'}, {"111011", '7'},
      {"111100", '8'}, {"111101", '9'}, {"111110", '+'}, {"111111", '/'}});
 
-struct s
-{
-    uint8_t upperNumber : 4;
-    uint8_t lowerNumber : 4;
-};
-
-// struct size should be exactly 2 bytes
-struct RelationBetweenHexAndBase64
-{
-    union
-    {
-        struct
-        {
-            uint8_t first_hex : 4;
-            uint8_t second_hex : 4;
-            uint8_t third_hex : 4;
-        };
-
-        struct
-        {
-            uint8_t first_base64 : 6;
-            uint8_t second_base64 : 6;
-        };
-    };
-};
-
 namespace
 {
 std::string getBinaryRepresentationOfHexNumber(const std::string &t_hexNumber)

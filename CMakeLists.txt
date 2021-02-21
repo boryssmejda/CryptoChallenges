@@ -9,6 +9,10 @@ project(CryptoChallenges CXX)
 
 option(BUILD_TESTS "BUILD_TESTS" OFF)
 
+if(UNIX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Werror")
+endif()
+
     if(BUILD_TESTS)
         message(STATUS "Building the project with Unit Tests")
         add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/googletest)

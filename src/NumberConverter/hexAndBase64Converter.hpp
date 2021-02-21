@@ -31,4 +31,4 @@ namespace crypto
 
     std::string convertFromBase64IntoHex(const std::string& t_base64Number);
     std::string convertFromHexIntoBase64(const std::string& t_hexNumber);
-};
+}

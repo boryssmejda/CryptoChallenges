@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.18)
     set(MODULE_NAME hexAndBase64Converter)
 
     set(SOURCES
-        ${CMAKE_CURRENT_SOURCE_DIR}/HexAndBase64Converter/hexAndBase64Converter.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/HexAndBase64Converter/hexAndBase64Converter.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/NumberConverter/hexAndBase64Converter.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/NumberConverter/hexAndBase64Converter.hpp
     )
 
     add_library(${MODULE_NAME} STATIC ${SOURCES})

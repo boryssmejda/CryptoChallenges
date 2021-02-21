@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.18)
 
+    get_target_property(SPDLOG_LOCATION spdlog INCLUDE_DIRECTORIES)
+    get_target_property(GTEST_LOCATION gtest INCLUDE_DIRECTORIES)
+
     add_subdirectory(HexAndBase64Converter)
 
     set(SOURCES
