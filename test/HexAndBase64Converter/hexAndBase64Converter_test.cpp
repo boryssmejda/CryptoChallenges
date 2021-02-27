@@ -3,54 +3,63 @@
 #include "spdlog/spdlog.h"
 
 #include <iostream>
+#include <string>
 
-TEST(TestHexAndBase64Converter, singleCharacterConversionFromHexIntoBase64) {
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("0"), "A");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("1"), "B");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("2"), "C");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("3"), "D");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("4"), "E");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("5"), "F");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("6"), "G");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("7"), "H");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("8"), "I");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("9"), "J");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("a"), "K");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("b"), "L");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("c"), "M");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("d"), "N");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("e"), "O");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("f"), "P");
+struct TestParameters
+{
+    std::string input;
+    std::string expectedOutput;
+};
+
+class HexIntoBase64Converter_parametrized : public ::testing::TestWithParam<TestParameters>
+{};
+
+TEST_P(HexIntoBase64Converter_parametrized, conversionFromHexIntoBase64)
+{
+    const TestParameters& parameters = GetParam();
+    EXPECT_EQ(crypto::convertFromHexIntoBase64(parameters.input), parameters.expectedOutput);
 }
 
-TEST(TestHexAndBase64Converter, twoHexCharactersIntoBase64) {
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("10"), "Q");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("11"), "R");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("12"), "S");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("13"), "T");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("14"), "U");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("15"), "V");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("16"), "W");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("17"), "X");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("18"), "Y");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("19"), "Z");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("1a"), "a");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("1b"), "b");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("1c"), "c");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("1d"), "d");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("1e"), "e");
-    EXPECT_EQ(crypto::convertFromHexIntoBase64("1f"), "f");
-}
-
-TEST(TestHexAndBase64Converter, longHexadecimalNumberIntoBase64) {
-    std::string expected{
-        "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"};
-    std::string input{
-        "49276d206b696c6c696e6720796f757220627261696e206c696b652061"
-        "20706f69736f6e6f7573206d757368726f6f6d"};
-
-    ASSERT_EQ(crypto::convertFromHexIntoBase64(input), expected);
-}
+INSTANTIATE_TEST_SUITE_P(TestConversion, HexIntoBase64Converter_parametrized,
+    testing::Values(
+        TestParameters{.input{"0"}, .expectedOutput{"A"}},
+        TestParameters{.input{"1"}, .expectedOutput{"B"}},
+        TestParameters{.input{"2"}, .expectedOutput{"C"}},
+        TestParameters{.input{"3"}, .expectedOutput{"D"}},
+        TestParameters{.input{"4"}, .expectedOutput{"E"}},
+        TestParameters{.input{"5"}, .expectedOutput{"F"}},
+        TestParameters{.input{"6"}, .expectedOutput{"G"}},
+        TestParameters{.input{"7"}, .expectedOutput{"H"}},
+        TestParameters{.input{"8"}, .expectedOutput{"I"}},
+        TestParameters{.input{"9"}, .expectedOutput{"J"}},
+        TestParameters{.input{"a"}, .expectedOutput{"K"}},
+        TestParameters{.input{"b"}, .expectedOutput{"L"}},
+        TestParameters{.input{"c"}, .expectedOutput{"M"}},
+        TestParameters{.input{"d"}, .expectedOutput{"N"}},
+        TestParameters{.input{"e"}, .expectedOutput{"O"}},
+        TestParameters{.input{"f"}, .expectedOutput{"P"}},
+        TestParameters{.input{"10"}, .expectedOutput{"Q"}},
+        TestParameters{.input{"11"}, .expectedOutput{"R"}},
+        TestParameters{.input{"12"}, .expectedOutput{"S"}},
+        TestParameters{.input{"13"}, .expectedOutput{"T"}},
+        TestParameters{.input{"14"}, .expectedOutput{"U"}},
+        TestParameters{.input{"15"}, .expectedOutput{"V"}},
+        TestParameters{.input{"16"}, .expectedOutput{"W"}},
+        TestParameters{.input{"17"}, .expectedOutput{"X"}},
+        TestParameters{.input{"18"}, .expectedOutput{"Y"}},
+        TestParameters{.input{"19"}, .expectedOutput{"Z"}},
+        TestParameters{.input{"1a"}, .expectedOutput{"a"}},
+        TestParameters{.input{"1b"}, .expectedOutput{"b"}},
+        TestParameters{.input{"1c"}, .expectedOutput{"c"}},
+        TestParameters{.input{"1d"}, .expectedOutput{"d"}},
+        TestParameters{.input{"1e"}, .expectedOutput{"e"}},
+        TestParameters{.input{"1f"}, .expectedOutput{"f"}},
+        TestParameters{.input{"49276d206b696c6c696e6720796f757220627261696e206c696b652061"
+                                "20706f69736f6e6f7573206d757368726f6f6d"}, 
+                                .expectedOutput{"SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"}
+        }
+    )
+);
 
 TEST(TestHexAndBase64Converter, singleCharacterConversionFromBase64IntoHex) {
     EXPECT_EQ(crypto::convertFromBase64IntoHex("A"), "0");
