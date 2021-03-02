@@ -8,12 +8,9 @@ project(CryptoChallenges CXX)
 
 option(BUILD_TESTS "BUILD_TESTS" OFF)
 
-    message("Build ${BUILD_TESTS}<---")
-
-    if(BUILD_TESTS)
-        message("Building the project with Tests!")
-        add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/googletest)
-    endif()
+if(UNIX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -pedantic")
+endif()
 
     find_package(OpenSSL REQUIRED)
 
@@ -23,5 +20,7 @@ option(BUILD_TESTS "BUILD_TESTS" OFF)
 
     if(BUILD_TESTS)
         enable_testing()
+        message(STATUS "Building the project with Unit Tests")
+        add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/googletest)
         add_subdirectory(test)
     endif()
