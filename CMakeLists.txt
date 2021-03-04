@@ -9,9 +9,13 @@ project(CryptoChallenges CXX)
 
 option(BUILD_TESTS "BUILD_TESTS" OFF)
 
+include(cmake/git.cmake)
+
 if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -pedantic")
 endif()
+
+    git_init_submodules()
 
     find_package(OpenSSL REQUIRED)
 
