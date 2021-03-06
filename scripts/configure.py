@@ -11,9 +11,7 @@ def get_generator():
     }
     return generators[platform.system()]
 
-
-if __name__ == "__main__":
-
+def configure_cmake():
     PLATFORM_GENERATOR = get_generator()
     cmake_command = ["cmake",
                     "-G", PLATFORM_GENERATOR,
@@ -23,3 +21,8 @@ if __name__ == "__main__":
                     "-D", "BUILD_TESTS=ON"]
 
     subprocess.run(cmake_command)
+
+
+if __name__ == "__main__":
+
+    configure_cmake()
