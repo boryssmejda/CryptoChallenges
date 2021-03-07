@@ -1,5 +1,6 @@
-import project_paths as pp
+import argparse
 import os
+import project_paths as pp
 import shutil
 import sys
 
@@ -13,23 +14,20 @@ def delete_if_exists(FOLDER_PATH: str) -> None:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("folder-to-be-deleted", choices=['build', 'install', 'env', 'all'],
+        help="Choose folder to be deleted, 'all' deletes build, install and venv at once")
+    args = parser.parse_args()
 
-    AVAILABLE_CONFIGURATIONS = ["all", "build", "install", "venv"]
+    folder_to_be_deleted = vars(args)['folder-to-be-deleted']
 
-    if len(sys.argv) == 2:
-        configuration = sys.argv[1]
-    else:
-        configuration = "build"
-
-    assert(configuration in AVAILABLE_CONFIGURATIONS), "Incorrect configuration! Aborting...."
-
-    if configuration == "all":
+    if folder_to_be_deleted == 'all':
         delete_if_exists(pp.INSTALL_DIR)
         delete_if_exists(pp.BUILD_DIR)
         delete_if_exists(pp.VENV_FOLDER_LOCATION)
-    elif configuration == "build":
+    elif folder_to_be_deleted == "build":
         delete_if_exists(pp.BUILD_DIR)
-    elif configuration == "install":
+    elif folder_to_be_deleted == "install":
         delete_if_exists(pp.INSTALL_DIR)
-    elif configuration == "venv":
+    elif folder_to_be_deleted == "env":
         delete_if_exists(pp.VENV_FOLDER_LOCATION)
