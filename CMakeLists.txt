@@ -18,6 +18,23 @@ option(BUILD_TESTS "BUILD_TESTS" OFF)
     include(cmake/CompilerWarnings.cmake)
     set_project_warnings(project_warnings)
 
+    if(ENABLE_COVERAGE)
+        message(STATUS "Code coverage enabled!")
+
+        include(cmake/coverage.cmake)
+        # this functions must be called before creating any target with add_*
+        # the function appends gcov flags to CXX_COMPILER_FLAGS,
+        # so all sources are compiled with them.
+        append_coverage_compiler_flags()
+
+        setup_target_for_coverage(
+            NAME ut_coverage
+            DEPENDENCIES ut cryptoLib
+            BASE_DIRECTORY "${CMAKE_SOURCE_DIR}/src"
+            EXCLUDE "${CMAKE_SOURCE_DIR}/third_party"
+        )
+    endif()
+
     find_package(OpenSSL REQUIRED)
 
     add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/fmt)
@@ -29,19 +46,4 @@ option(BUILD_TESTS "BUILD_TESTS" OFF)
         message(STATUS "Building the project with Unit Tests")
         add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/googletest)
         add_subdirectory(test)
-    endif()
-
-    if(ENABLE_COVERAGE)
-        message(STATUS "Code coverage enabled!")
-
-        include(cmake/CodeCoverage.cmake)
-        append_coverage_compiler_flags()
-
-        setup_target_for_coverage_gcovr_html(
-            NAME ut_coverage
-            EXECUTABLE ut
-            DEPENDENCIES ut cryptoLib
-            BASE_DIRECTORY "${CMAKE_SOURCE_DIR}/src"
-            EXCLUDE "${CMAKE_SOURCE_DIR}/third_party"
-        )
     endif()
