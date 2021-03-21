@@ -1,6 +1,8 @@
-import project_paths as pp
+"""Install module runs cmake --install command to create library package"""
+
 import sys
 import subprocess
+import project_paths as pp
 
 if __name__ == "__main__":
     assert (len(sys.argv) == 2), "No build type given! Aborting ..."
@@ -9,5 +11,5 @@ if __name__ == "__main__":
     if CONFIGURATION not in ['Release', 'Debug']:
         raise ValueError(f"Unknown Configuration: {CONFIGURATION}")
 
-    cmake_command = ['cmake', '--install', pp.BUILD_DIR, '--config', CONFIGURATION]
-    subprocess.run(cmake_command)
+    CMAKE_COMMAND = ['cmake', '--install', pp.BUILD_DIR, '--config', CONFIGURATION]
+    subprocess.run(CMAKE_COMMAND, check=True)

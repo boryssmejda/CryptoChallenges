@@ -1,8 +1,9 @@
-import project_paths as pp
+"""Test module runs ctest on the project with given configuration"""
+
 import sys
 import os
 import subprocess
-
+import project_paths as pp
 
 if __name__ == "__main__":
     assert (len(sys.argv) == 2), "No build type given! Aborting ..."
@@ -16,5 +17,5 @@ if __name__ == "__main__":
     except OSError:
         print(f"Can't change the cwd to: {pp.BUILD_DIR}")
 
-    cmake_command = ['ctest','--build-config', CONFIGURATION]
-    subprocess.run(cmake_command)
+    CMAKE_COMMAND = ['ctest', '--build-config', CONFIGURATION]
+    subprocess.run(CMAKE_COMMAND, check=True)

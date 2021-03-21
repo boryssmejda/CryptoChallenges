@@ -9,10 +9,10 @@ cmake_minimum_required(VERSION 3.18)
         ${CMAKE_CURRENT_SOURCE_DIR}/mainTestStartingPoint.cpp
     )
 
-    add_executable(cryptoTests ${SOURCES})
-    add_dependencies(cryptoTests crypto::Numbers_test)
+    add_executable(ut ${SOURCES})
+    add_dependencies(ut cryptoLib)
 
-    target_link_libraries(cryptoTests
+    target_link_libraries(ut
         PRIVATE
             $<TARGET_OBJECTS:crypto::Numbers_test>
             crypto::Numbers
@@ -20,12 +20,13 @@ cmake_minimum_required(VERSION 3.18)
             gtest
             gmock
             gtest_main
+            project_warnings
     )
 
-    add_test(NAME cryptoTests COMMAND cryptoTests)
+    add_test(NAME ut COMMAND ut)
 
-    add_custom_command(TARGET cryptoTests
-        POST_BUILD
-        COMMAND ${CMAKE_CTEST_COMMAND} -C $<IF:$<CONFIG:Debug>,Debug,Release> --progress --output-on-failure
-        COMMENT "Running CTest after building tests!"
+    add_custom_command(TARGET ut
+            POST_BUILD
+            COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG> --progress --output-on-failure
+            COMMENT "Running CTest after building tests!"
     )

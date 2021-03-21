@@ -19,4 +19,5 @@ cmake_minimum_required(VERSION 3.18)
 
     target_link_libraries(${MODULE_NAME} PRIVATE 
         spdlog
+        project_warnings
     )

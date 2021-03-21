@@ -1,9 +1,8 @@
-import project_paths as pp
 import platform
-import sys
 import subprocess
+import project_paths as pp
 
-def get_generator():
+def get_generator() -> str:
     generators = {
         'Windows': 'Visual Studio 16 2019',
         'Linux': 'Ninja Multi-Config',
@@ -11,18 +10,28 @@ def get_generator():
     }
     return generators[platform.system()]
 
-def configure_cmake():
-    PLATFORM_GENERATOR = get_generator()
+def configure_cmake() -> None:
+    generator = get_generator()
     cmake_command = ["cmake",
-                    "-G", PLATFORM_GENERATOR,
-                    "-S", pp.PROJECT_ROOT,
-                    "-B", pp.BUILD_DIR,
-                    "-D", f"CMAKE_INSTALL_PREFIX={pp.INSTALL_DIR}",
-                    "-D", "BUILD_TESTS=ON"]
+                     "-G", generator,
+                     "-S", pp.PROJECT_ROOT,
+                     "-B", pp.BUILD_DIR,
+                     "-D", f"CMAKE_INSTALL_PREFIX={pp.INSTALL_DIR}",
+                     "-D", "BUILD_TESTS=ON",
+                     "-D", "ENABLE_COVERAGE=ON"]
 
-    subprocess.run(cmake_command)
+    subprocess.run(cmake_command, check=True)
 
 
 if __name__ == "__main__":
 
     configure_cmake()
+
+# build
+# ut_build
+# ut_coverage
+
+# build -> no flags
+# ut_build -> BUILD_TESTS=ON
+# ut_coverage -> BUILD_TESTS=ON ENABLE_COVERAGE=ON
+# ut_valgrind

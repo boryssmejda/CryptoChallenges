@@ -1,3 +1,5 @@
+"""Contains paths used to configure, build and install the project"""
+
 import os
 
 SCRIPTS_LOCATION = os.getcwd() # PROJECT_ROOT/scripts/
@@ -15,6 +17,7 @@ VENV_FOLDER_LOCATION = os.path.join(PROJECT_ROOT, "env")
 VENV_ACTIVATE_LOCATION = os.path.join(VENV_FOLDER_LOCATION, "bin", "activate")
 
 def print_project_paths():
+    """Prints locations used in other .py scripts"""
     print(f"SCRIPTS_LOCATION: {SCRIPTS_LOCATION}")
     print(f"PROJECT_ROOT: {PROJECT_ROOT}")
     print(f"BUILD_DIR: {BUILD_DIR}")
