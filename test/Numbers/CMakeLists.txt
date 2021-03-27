@@ -10,9 +10,9 @@ cmake_minimum_required(VERSION 3.18)
 
     add_library(crypto::Numbers_test ALIAS Numbers_test)
 
-    target_link_libraries(Numbers_test PRIVATE Numbers)
-    target_include_directories(Numbers_test
+    target_link_libraries(Numbers_test
         PRIVATE
-            ${SPDLOG_LOCATION}
-            ${GTEST_LOCATION}
+            Numbers
+            spdlog::spdlog
+            GTest::gtest
     )

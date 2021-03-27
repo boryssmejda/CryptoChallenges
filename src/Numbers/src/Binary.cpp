@@ -1,6 +1,7 @@
 #include "Binary.hpp"
 
 #include "spdlog/spdlog.h"
+#include "spdlog/fmt/fmt.h"
 
 #include <algorithm>
 #include <stdexcept>
@@ -10,6 +11,7 @@ crypto::Binary::Binary(const std::string& t_binaryNumberRepresentation):
 {
     if(!isNumberCorrect())
     {
+        fmt::print("Hello World!");
         SPDLOG_ERROR("Incorrect Binary Representation: {}", m_number);
         throw std::invalid_argument("a");
     }

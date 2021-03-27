@@ -1,8 +1,4 @@
 cmake_minimum_required(VERSION 3.18)
-
-    get_target_property(SPDLOG_LOCATION spdlog INCLUDE_DIRECTORIES)
-    get_target_property(GTEST_LOCATION gtest INCLUDE_DIRECTORIES)
-
     add_subdirectory(Numbers)
 
     set(SOURCES
@@ -16,10 +12,11 @@ cmake_minimum_required(VERSION 3.18)
         PRIVATE
             $<TARGET_OBJECTS:crypto::Numbers_test>
             crypto::Numbers
-            spdlog
-            gtest
-            gmock
-            gtest_main
+            spdlog::spdlog
+            GTest::gtest
+            GTest::gmock
+            GTest::gmock_main
+            GTest::gtest_main
             project_warnings
     )
 

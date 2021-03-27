@@ -21,7 +21,7 @@ option(BUILD_TESTS "BUILD_TESTS" OFF)
     if(ENABLE_COVERAGE)
         message(STATUS "Code coverage enabled!")
 
-        include(cmake/coverage.cmake)
+        include(cmake/Coverage.cmake)
         # this functions must be called before creating any target with add_*
         # the function appends gcov flags to CXX_COMPILER_FLAGS,
         # so all sources are compiled with them.
@@ -36,14 +36,19 @@ option(BUILD_TESTS "BUILD_TESTS" OFF)
     endif()
 
     find_package(OpenSSL REQUIRED)
+    find_package(spdlog 1.8.2 EXACT CONFIG REQUIRED)
 
-    add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/fmt)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/spdlog)
     add_subdirectory(src)
 
     if(BUILD_TESTS)
         enable_testing()
         message(STATUS "Building the project with Unit Tests")
-        add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/googletest)
+        find_package(GTest 1.10.0 EXACT CONFIG REQUIRED)
         add_subdirectory(test)
+    endif()
+
+    if(RUN_UT_VALGRIND)
+        message(STATUS "Running UT through valgrind check")
+        include(cmake/Valgrind.cmake)
+        run_ut_valgrind(TARGET_NAME ut)
     endif()
