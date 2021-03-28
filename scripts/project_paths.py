@@ -12,6 +12,8 @@ CONANFILE_DESKTOP_LOCATION = os.path.join(CONAN_FOLDER_LOCATION, "conanfiles", "
 
 CONAN_PROFILES_ROOT = os.path.join(CONAN_FOLDER_LOCATION, "profiles")
 CONAN_PROFILE_LOCATION_LINUX = os.path.join(CONAN_PROFILES_ROOT, "conan-profile-linux.txt")
+CONAN_PROFILE_LOCATION_WINDOWS = os.path.join(CONAN_PROFILES_ROOT, "conan-profile-windows.txt")
+CONAN_PROFILE_LOCATION_MACOS = os.path.join(CONAN_PROFILES_ROOT, "conan-profile-macos.txt")
 
 VENV_FOLDER_LOCATION = os.path.join(PROJECT_ROOT, "env")
 VENV_ACTIVATE_LOCATION = os.path.join(VENV_FOLDER_LOCATION, "bin", "activate")

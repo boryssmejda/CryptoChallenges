@@ -12,11 +12,7 @@ cmake_minimum_required(VERSION 3.18)
         PRIVATE
             $<TARGET_OBJECTS:crypto::Numbers_test>
             crypto::Numbers
-            spdlog::spdlog
-            GTest::gtest
-            GTest::gmock
-            GTest::gmock_main
-            GTest::gtest_main
+            CONAN_PKG::gtest
             project_warnings
     )
 

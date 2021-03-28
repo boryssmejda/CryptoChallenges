@@ -9,6 +9,15 @@ set(CMAKE_POSITION_INDEPENDENT_CODE "ON")
 project(CryptoChallenges CXX)
 
 option(BUILD_TESTS "BUILD_TESTS" OFF)
+option(ENABLE_COVERAGE "ENABLE_COVERAGE" OFF)
+option(RUN_UT_VALGRIND "RUN_UT_VALGRIND" OFF)
+
+message(STATUS "BUILD_TESTS = ${BUILD_TESTS}")
+message(STATUS "ENABLE_COVERAGE = ${ENABLE_COVERAGE}")
+message(STATUS "RUN_UT_VALGRIND = ${RUN_UT_VALGRIND}")
+
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
+    conan_basic_setup(TARGETS)
 
     include(cmake/Git.cmake)
     git_init_submodules()
@@ -35,15 +44,11 @@ option(BUILD_TESTS "BUILD_TESTS" OFF)
         )
     endif()
 
-    find_package(OpenSSL REQUIRED)
-    find_package(spdlog 1.8.2 EXACT CONFIG REQUIRED)
-
     add_subdirectory(src)
 
     if(BUILD_TESTS)
         enable_testing()
         message(STATUS "Building the project with Unit Tests")
-        find_package(GTest 1.10.0 EXACT CONFIG REQUIRED)
         add_subdirectory(test)
     endif()
 

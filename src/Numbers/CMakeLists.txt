@@ -17,7 +17,7 @@ cmake_minimum_required(VERSION 3.18)
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
     )
 
-    target_link_libraries(${MODULE_NAME} PRIVATE 
-        spdlog::spdlog
+    target_link_libraries(${MODULE_NAME} PUBLIC
+        CONAN_PKG::spdlog
         project_warnings
     )

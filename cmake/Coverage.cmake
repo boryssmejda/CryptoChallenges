@@ -33,8 +33,6 @@ function(setup_target_for_coverage)
     set(multiValueArgs EXCLUDE DEPENDENCIES)
     cmake_parse_arguments(COVERAGE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    message("${COVERAGE_NAME} = COVERAGE_NAME<------")
-
     # Collect excludes
     set(GCOVR_EXCLUDES "")
     foreach(EXCLUDE ${COVERAGE_EXCLUDE})

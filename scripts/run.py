@@ -3,6 +3,7 @@
 import argparse
 import platform
 import subprocess
+from typing import List
 import project_paths as pp
 
 def get_generator() -> str:
@@ -17,8 +18,8 @@ def build_target(BUILD_CONFIGURATION: str, TARGET_NAME: str) -> None:
     assert (BUILD_CONFIGURATION in ["Debug", "Release"]), "Unknown build configuration!"
 
     BUILD_COMMAND = ['cmake', '--build', pp.BUILD_DIR,
-                         '--config', BUILD_CONFIGURATION,
-                         '--target', TARGET_NAME]
+                     '--config', BUILD_CONFIGURATION,
+                     '--target', TARGET_NAME]
 
     CommandExecutor.execute_command(BUILD_COMMAND)
 
@@ -27,30 +28,63 @@ class CommandExecutor:
     def execute_command(COMMAND) -> None:
         subprocess.run(COMMAND, check=True)
 
+class ConanPackageManager:
+    @staticmethod
+    def install_dependencies() -> None:
+        PROFILE = ConanPackageManager.get_conan_profile()
+
+        CONAN_INSTALL_DEBUG = ConanPackageManager \
+            .create_conan_install_command(BUILD_CONFIGURATION="Debug", CONAN_PROFILE=PROFILE)
+
+        CONAN_INSTALL_RELEASE = ConanPackageManager \
+            .create_conan_install_command(BUILD_CONFIGURATION="Release", CONAN_PROFILE=PROFILE)
+
+        CommandExecutor.execute_command(CONAN_INSTALL_DEBUG)
+        CommandExecutor.execute_command(CONAN_INSTALL_RELEASE)
+
+    @staticmethod
+    def create_conan_install_command(BUILD_CONFIGURATION: str, CONAN_PROFILE: str) -> List[str]:
+        CONAN_INSTALL = ["conan", "install",
+                         "-pr", f"{CONAN_PROFILE}",
+                         "-s", f"build_type={BUILD_CONFIGURATION}",
+                         "-if", f"{pp.BUILD_DIR}",
+                         f"{pp.CONANFILE_DESKTOP_LOCATION}"]
+
+        return CONAN_INSTALL
+
+    @staticmethod
+    def get_conan_profile():
+        PROFILES = {
+            'Windows': pp.CONAN_PROFILE_LOCATION_WINDOWS,
+            'Linux': pp.CONAN_PROFILE_LOCATION_LINUX,
+            'Darwin': pp.CONAN_PROFILE_LOCATION_MACOS
+        }
+        return PROFILES[platform.system()]
+
 class CMakeConfigurationCommandBuilder:
     def __init__(self):
         generator = get_generator()
         self.cmake_command = ["cmake",
-                               "-G", generator,
-                               "-S", pp.PROJECT_ROOT,
-                               "-B", pp.BUILD_DIR,
-                               "-D", f"OPENSSL_ROOT_DIR={pp.PROJECT_ROOT}/deps/OpenSSL/lib",
-                               "-D", f"CMAKE_PREFIX_PATH={pp.PROJECT_ROOT}/deps",
-                               "-D", f"CMAKE_INSTALL_PREFIX={pp.INSTALL_DIR}"]
+                              "-G", generator,
+                              "-S", pp.PROJECT_ROOT,
+                              "-B", pp.BUILD_DIR,
+                              "-D", f"OPENSSL_ROOT_DIR={pp.PROJECT_ROOT}/deps/OpenSSL/lib",
+                              "-D", f"CMAKE_PREFIX_PATH={pp.PROJECT_ROOT}/deps",
+                              "-D", f"CMAKE_INSTALL_PREFIX={pp.INSTALL_DIR}"]
 
         self.SHOULD_BUILD_TESTS = None
         self.SHOULD_CREATE_CODE_COVERAGE = None
         self.SHOULD_USE_VALGRIND = None
 
-    def shouldBuildWithUnitTests(self, SHOULD_BUILD_TESTS: bool):
+    def should_build_with_unit_tests(self, SHOULD_BUILD_TESTS: bool):
         self.SHOULD_BUILD_TESTS = SHOULD_BUILD_TESTS
         return self
 
-    def shouldUseValgrind(self, SHOULD_USE_VALGRIND: bool):
+    def should_use_valgrind(self, SHOULD_USE_VALGRIND: bool):
         self.SHOULD_USE_VALGRIND = SHOULD_USE_VALGRIND
         return self
 
-    def shouldBuildWithCodeCoverage(self, SHOULD_CREATE_CODE_COVERAGE: bool):
+    def should_build_with_code_overage(self, SHOULD_CREATE_CODE_COVERAGE: bool):
         self.SHOULD_CREATE_CODE_COVERAGE = SHOULD_CREATE_CODE_COVERAGE
         return self
 
@@ -77,9 +111,9 @@ class CryptoLibBuild:
 
     def configure_cmake(self):
         CMAKE_COMMAND = CMakeConfigurationCommandBuilder() \
-                        .shouldBuildWithCodeCoverage(False) \
-                        .shouldBuildWithUnitTests(False) \
-                        .shouldUseValgrind(False) \
+                        .should_build_with_code_overage(False) \
+                        .should_build_with_unit_tests(False) \
+                        .should_use_valgrind(False) \
                         .build()
 
         CommandExecutor.execute_command(CMAKE_COMMAND)
@@ -99,9 +133,9 @@ class UnitTestBuild:
 
     def configure_cmake(self):
         CMAKE_COMMAND = CMakeConfigurationCommandBuilder() \
-                        .shouldBuildWithUnitTests(True) \
-                        .shouldUseValgrind(False) \
-                        .shouldBuildWithCodeCoverage(False) \
+                        .should_build_with_unit_tests(True) \
+                        .should_use_valgrind(False) \
+                        .should_build_with_code_overage(False) \
                         .build()
 
         CommandExecutor.execute_command(CMAKE_COMMAND)
@@ -118,9 +152,9 @@ class CodeCoverageBuild:
 
     def configure_cmake(self):
         CMAKE_COMMAND = CMakeConfigurationCommandBuilder() \
-                        .shouldBuildWithUnitTests(True) \
-                        .shouldUseValgrind(False) \
-                        .shouldBuildWithCodeCoverage(True) \
+                        .should_build_with_unit_tests(True) \
+                        .should_use_valgrind(False) \
+                        .should_build_with_code_overage(True) \
                         .build()
 
         CommandExecutor.execute_command(CMAKE_COMMAND)
@@ -137,9 +171,9 @@ class UnitTestBuildWithValgrind:
 
     def configure_cmake(self):
         CMAKE_COMMAND = CMakeConfigurationCommandBuilder() \
-                        .shouldBuildWithUnitTests(True) \
-                        .shouldUseValgrind(True) \
-                        .shouldBuildWithCodeCoverage(False) \
+                        .should_build_with_unit_tests(True) \
+                        .should_use_valgrind(True) \
+                        .should_build_with_code_overage(False) \
                         .build()
 
         CommandExecutor.execute_command(CMAKE_COMMAND)
@@ -154,6 +188,8 @@ if __name__ == "__main__":
                                                  'ut_coverage', 'ut_valgrind',
                                                  'static_analysis'])
     ARGS = PARSER.parse_args()
+
+    ConanPackageManager.install_dependencies()
 
     BUILD_TARGET = vars(ARGS)['build_target']
 

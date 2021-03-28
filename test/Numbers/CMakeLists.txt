@@ -11,8 +11,8 @@ cmake_minimum_required(VERSION 3.18)
     add_library(crypto::Numbers_test ALIAS Numbers_test)
 
     target_link_libraries(Numbers_test
-        PRIVATE
+        PUBLIC
             Numbers
-            spdlog::spdlog
-            GTest::gtest
+            CONAN_PKG::spdlog
+            CONAN_PKG::gtest
     )

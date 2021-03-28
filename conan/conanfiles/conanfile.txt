@@ -1,0 +1,7 @@
+[requires]
+gtest/1.10.0@
+spdlog/1.8.2@
+openssl/1.1.1j@
+
+[generators]
+cmake_multi
