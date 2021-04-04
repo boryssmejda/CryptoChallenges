@@ -9,6 +9,7 @@ cmake_minimum_required(VERSION 3.18)
     )
 
     add_library(crypto::Numbers_test ALIAS Numbers_test)
+    add_dependencies(Numbers_test Numbers)
 
     target_link_libraries(Numbers_test
         PUBLIC

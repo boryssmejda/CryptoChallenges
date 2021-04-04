@@ -1,19 +1,20 @@
 cmake_minimum_required(VERSION 3.18)
     add_subdirectory(Numbers)
+    add_subdirectory(LeetCode)
 
     set(SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/mainTestStartingPoint.cpp
     )
 
     add_executable(ut ${SOURCES})
-    add_dependencies(ut cryptoLib)
 
     target_link_libraries(ut
         PRIVATE
-            $<TARGET_OBJECTS:crypto::Numbers_test>
-            crypto::Numbers
-            CONAN_PKG::gtest
             project_warnings
+            cryptoLib
+            CONAN_PKG::gtest
+            $<TARGET_OBJECTS:crypto::Numbers_test>
+            $<TARGET_OBJECTS:leetCode::ThreeSum_test>
     )
 
     add_test(NAME ut COMMAND ut)

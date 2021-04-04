@@ -75,6 +75,7 @@ class CMakeConfigurationCommandBuilder:
         self.SHOULD_BUILD_TESTS = None
         self.SHOULD_CREATE_CODE_COVERAGE = None
         self.SHOULD_USE_VALGRIND = None
+        self.SHOULD_CMAKE_EXPORT_COMPILE_COMMANDS = None
 
     def should_build_with_unit_tests(self, SHOULD_BUILD_TESTS: bool):
         self.SHOULD_BUILD_TESTS = SHOULD_BUILD_TESTS
@@ -84,18 +85,24 @@ class CMakeConfigurationCommandBuilder:
         self.SHOULD_USE_VALGRIND = SHOULD_USE_VALGRIND
         return self
 
-    def should_build_with_code_overage(self, SHOULD_CREATE_CODE_COVERAGE: bool):
+    def should_build_with_code_coverage(self, SHOULD_CREATE_CODE_COVERAGE: bool):
         self.SHOULD_CREATE_CODE_COVERAGE = SHOULD_CREATE_CODE_COVERAGE
+        return self
+
+    def should_cmake_export_compile_commands(self, SHOULD_CMAKE_EXPORT_COMPILE_COMMANDS: bool) -> None:
+        self.SHOULD_CMAKE_EXPORT_COMPILE_COMMANDS = SHOULD_CMAKE_EXPORT_COMPILE_COMMANDS
         return self
 
     def build(self):
         assert (self.SHOULD_BUILD_TESTS is not None), "SHOULD_BUILD_TESTS not set!"
         assert (self.SHOULD_CREATE_CODE_COVERAGE is not None), "SHOULD_CREATE_CODE_COVERAGE not set!"
         assert (self.SHOULD_USE_VALGRIND is not None), "SHOULD_USE_VALGRIND not set!"
+        assert (self.SHOULD_CMAKE_EXPORT_COMPILE_COMMANDS is not None), "SHOULD_CMAKE_EXPORT_COMPILE_COMMANDS not set!"
 
         self.cmake_command += ["-D", f"RUN_UT_VALGRIND={self.SHOULD_USE_VALGRIND}"]
         self.cmake_command += ["-D", f"ENABLE_COVERAGE={self.SHOULD_CREATE_CODE_COVERAGE}"]
         self.cmake_command += ["-D", f"BUILD_TESTS={self.SHOULD_BUILD_TESTS}"]
+        self.cmake_command += ["-D", f"CMAKE_EXPORT_COMPILE_COMMANDS={self.SHOULD_CMAKE_EXPORT_COMPILE_COMMANDS}"]
 
         return self.cmake_command
 
@@ -105,15 +112,16 @@ class CryptoLibBuild:
             raise ValueError(f"Unknown Configuration: {CONFIGURATION}")
 
         self.BUILD_CONFIGURATION = CONFIGURATION
-        self.TARGET_NAME = "cryptoLib"
+        self.TARGET_NAME = "all"
         self.configure_cmake()
         self.build()
 
     def configure_cmake(self):
         CMAKE_COMMAND = CMakeConfigurationCommandBuilder() \
-                        .should_build_with_code_overage(False) \
+                        .should_build_with_code_coverage(False) \
                         .should_build_with_unit_tests(False) \
                         .should_use_valgrind(False) \
+                        .should_cmake_export_compile_commands(False) \
                         .build()
 
         CommandExecutor.execute_command(CMAKE_COMMAND)
@@ -135,7 +143,8 @@ class UnitTestBuild:
         CMAKE_COMMAND = CMakeConfigurationCommandBuilder() \
                         .should_build_with_unit_tests(True) \
                         .should_use_valgrind(False) \
-                        .should_build_with_code_overage(False) \
+                        .should_build_with_code_coverage(False) \
+                        .should_cmake_export_compile_commands(False) \
                         .build()
 
         CommandExecutor.execute_command(CMAKE_COMMAND)
@@ -173,13 +182,34 @@ class UnitTestBuildWithValgrind:
         CMAKE_COMMAND = CMakeConfigurationCommandBuilder() \
                         .should_build_with_unit_tests(True) \
                         .should_use_valgrind(True) \
-                        .should_build_with_code_overage(False) \
+                        .should_build_with_code_coverage(False) \
+                        .should_cmake_export_compile_commands(False) \
                         .build()
 
         CommandExecutor.execute_command(CMAKE_COMMAND)
 
     def build(self):
         build_target(self.BUILD_CONFIGURATION, self.TARGET_NAME)
+
+class ClangTidyBuild:
+    def __init__(self):
+        self.BUILD_CONFIGURATION = "Debug"
+        self.TARGET_NAME = "clang_tidy_analysis"
+        self.configure_cmake()
+        self.build()
+
+    def configure_cmake(self):
+        CMAKE_COMMAND = CMakeConfigurationCommandBuilder() \
+                        .should_build_with_unit_tests(True) \
+                        .should_build_with_code_coverage(False) \
+                        .should_use_valgrind(False) \
+                        .should_cmake_export_compile_commands(True) \
+                        .build()
+
+        CommandExecutor.execute_command(CMAKE_COMMAND)
+
+    def build(self):
+        build_target(self.BUILD_CONFIGURATION, "ut")
 
 if __name__ == "__main__":
     PARSER = argparse.ArgumentParser()
@@ -205,6 +235,8 @@ if __name__ == "__main__":
         CODE_COVERAGE_BUILD = CodeCoverageBuild()
     elif BUILD_TARGET == 'ut_valgrind':
         UT_VALGRIND_BUILD = UnitTestBuildWithValgrind()
+    elif BUILD_TARGET == 'static_analysis':
+        CLANG_TIDY_BUILD = ClangTidyBuild()
 
 
 """

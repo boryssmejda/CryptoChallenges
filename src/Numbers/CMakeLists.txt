@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.18)
         ${CMAKE_CURRENT_SOURCE_DIR}/src/Binary.cpp
     )
 
-    add_library(${MODULE_NAME} OBJECT ${SOURCES} ${HEADERS})
+    add_library(${MODULE_NAME} ${SOURCES} ${HEADERS})
     add_library(crypto::${MODULE_NAME} ALIAS ${MODULE_NAME})
 
     target_include_directories(${MODULE_NAME} PUBLIC

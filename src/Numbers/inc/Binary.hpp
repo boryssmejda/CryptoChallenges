@@ -7,11 +7,11 @@ namespace crypto
 class Binary
 {
     public:
-        explicit Binary(const std::string& t_binaryNumberRepresentation);
-        std::string get() const;
+        explicit Binary(std::string t_binaryNumberRepresentation);
+        [[nodiscard]] std::string get() const;
 
     private:
-        bool isNumberCorrect() const;
+        [[nodiscard]] bool isNumberCorrect() const;
         std::string m_number;
 };
-}
+}//namespace crypto

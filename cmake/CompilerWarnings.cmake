@@ -26,6 +26,10 @@ function(set_project_warnings target_name)
         set(CLANG_WARNINGS ${CLANG_WARNINGS} -Werror)
     endif()
 
+    if(RUN_UT_VALGRIND)
+        set(CLANG_WARNINGS ${CLANG_WARNINGS} -fsanitize=address)
+    endif()
+
 
     set(GCC_WARNINGS
         ${CLANG_WARNINGS}

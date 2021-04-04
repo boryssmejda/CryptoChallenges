@@ -11,7 +11,7 @@ class TestBinaryForCorrectInputParametrised : public ::testing::TestWithParam<st
 class TestBinaryForIncorrectInput : public ::testing::TestWithParam<std::string>
 {};
 
-TEST_P(TestBinaryForCorrectInputParametrised, whenGivenCorrectStringBinaryRepresentationConstructorShouldNotThrow)
+TEST_P(TestBinaryForCorrectInputParametrised, whenGivenCorrectStringConstructorShouldNotThrow)
 {
     const std::string& inputParameter = GetParam();
     EXPECT_NO_THROW(crypto::Binary{inputParameter});

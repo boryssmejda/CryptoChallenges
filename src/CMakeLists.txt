@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.18)
 
     add_subdirectory(Numbers)
+    add_subdirectory(LeetCode)
 
-    add_library(cryptoLib STATIC)
+    add_library(cryptoLib INTERFACE)
 
     target_link_libraries(cryptoLib
-        PRIVATE
+        INTERFACE
         crypto::Numbers
-        CONAN_PKG::openssl
+        leetCode::ThreeSum
     )

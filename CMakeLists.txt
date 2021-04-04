@@ -22,10 +22,15 @@ message(STATUS "RUN_UT_VALGRIND = ${RUN_UT_VALGRIND}")
     include(cmake/Git.cmake)
     git_init_submodules()
 
+    include(cmake/ClangTidy.cmake)
+
     # Link this 'library' to use the warnings specified in CompilerWarnings.cmake
     add_library(project_warnings INTERFACE)
     include(cmake/CompilerWarnings.cmake)
     set_project_warnings(project_warnings)
+
+    include(cmake/AddressSanitizer.cmake)
+    add_address_sanitizer(project_warnings)
 
     if(ENABLE_COVERAGE)
         message(STATUS "Code coverage enabled!")
