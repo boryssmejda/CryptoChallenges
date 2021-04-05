@@ -1,22 +1,20 @@
 #pragma once
 
 #include <string>
-
-class crypto::Binary;
+#include "Binary.hpp"
 
 namespace crypto
 {
 class BaseNumber
 {
-    public:
-        BaseNumber(const crypto::Binary& t_binaryRepresentation);
-        BaseNumber(const std::string& t_number);
+public:
+    virtual ~BaseNumber() = default;
+    virtual Binary getBinaryRepresentation() const = 0;
+    virtual std::string getStringRepresentation() const = 0;
 
-        virtual bool isNumberCorrect() const = 0;
-        virtual Binary getBinaryRepresentation() const = 0;
-        virtual ~BaseNumber() = default;
-
-    private:
-        std::string m_numberRepresentation;
+protected:
+    virtual bool isNumberCorrect() const = 0;
+    virtual std::string convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const = 0;
+    std::string m_numberRepresentation{"0"};
 };
 }//crypto

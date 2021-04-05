@@ -11,7 +11,7 @@ crypto::Binary::Binary(std::string t_binaryNumberRepresentation):
     if(!isNumberCorrect())
     {
         SPDLOG_ERROR("Incorrect Binary Representation: {}", m_number);
-        throw std::invalid_argument("a");
+        throw std::invalid_argument("Invalid Binary Representation");
     }
 }
 

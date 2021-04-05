@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.18)
 
     set(SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/TestBinary.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/TestDecimal.cpp
     )
 
     add_library(Numbers_test OBJECT

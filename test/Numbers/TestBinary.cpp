@@ -35,7 +35,7 @@ INSTANTIATE_TEST_SUITE_P(NumberTestForCorrectInputParameters,
      catch(const std::invalid_argument& error)
      {
          std::cout << error.what() << std::endl;
-         EXPECT_STREQ(error.what(), "a");
+         EXPECT_STREQ(error.what(), "Invalid Binary Representation");
      }
      catch(...)
      {
@@ -43,9 +43,8 @@ INSTANTIATE_TEST_SUITE_P(NumberTestForCorrectInputParameters,
      }
  }
 
- INSTANTIATE_TEST_SUITE_P(NumberTestForIncorrectConstructorParameters,
+INSTANTIATE_TEST_SUITE_P(NumberTestForIncorrectConstructorParameters,
                          TestBinaryForIncorrectInput,
                          testing::Values("o", "O", "a", "-", "/", ":", " ", "$", "^", "*", "(", ")",
                                          "{", "}", "|", "[", "]", "+", "-", "2", "3", "~", "#",
-                                         "borys", "1o", "1O", "01", "10000000b", "<1111>", "b101"
-                        ));
+                                         "borys", "1o", "1O", "01", "10000000b", "<1111>", "b101"));

@@ -163,7 +163,8 @@ class CodeCoverageBuild:
         CMAKE_COMMAND = CMakeConfigurationCommandBuilder() \
                         .should_build_with_unit_tests(True) \
                         .should_use_valgrind(False) \
-                        .should_build_with_code_overage(True) \
+                        .should_build_with_code_coverage(True) \
+                        .should_cmake_export_compile_commands(False) \
                         .build()
 
         CommandExecutor.execute_command(CMAKE_COMMAND)
