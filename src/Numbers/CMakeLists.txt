@@ -5,11 +5,13 @@ cmake_minimum_required(VERSION 3.18)
         ${CMAKE_CURRENT_SOURCE_DIR}/inc/BaseNumber.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/inc/Binary.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/inc/Decimal.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/inc/Octal.hpp
     )
 
     set(SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/Binary.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/Decimal.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/Octal.cpp
     )
 
     add_library(${MODULE_NAME} ${SOURCES} ${HEADERS})

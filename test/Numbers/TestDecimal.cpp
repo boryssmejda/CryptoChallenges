@@ -1,12 +1,8 @@
 #include "Decimal.hpp"
-
 #include "gtest/gtest.h"
 #include "spdlog/spdlog.h"
-
 #include <string>
 
-// Check if constructor throws an exception or not
-// Check if number created from binary is correct
 
 class TestDecimalForCorrectInput : public ::testing::TestWithParam<std::string>
 {};
@@ -66,7 +62,6 @@ TEST_P(TestDecimalWhenConstrParamIsOutOfRange, whenTooBigDecimalValueConstrShoul
     }
     catch(const std::length_error& error)
     {
-        std::cout << error.what() << std::endl;
         EXPECT_STREQ(error.what(), "Too big number to fit into uint64_t!");
     }
     catch(...)
@@ -154,3 +149,4 @@ INSTANTIATE_TEST_SUITE_P(NumberTestForCorrectInputParameters,
                             DecimalTestParameters{.binaryForm{crypto::Binary{"11"}}, .expectedDecimalForm{"3"}},
                             DecimalTestParameters{.binaryForm{crypto::Binary{"1111111"}}, .expectedDecimalForm{"127"}}
                         ));
+
