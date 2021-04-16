@@ -8,7 +8,8 @@
 namespace
 {
 using namespace std::literals;
-static constexpr std::array<std::pair<std::string_view,char>, 8> kRelationshipsBetweenBinaryAndOctalElements{
+static constexpr std::array<std::pair<std::string_view,char>, 8> kRelationshipsBetweenBinaryAndOctalElements
+{
         std::make_pair("000"sv, '0'),
         std::make_pair("001"sv, '1'),
         std::make_pair("010"sv, '2'),
@@ -17,7 +18,7 @@ static constexpr std::array<std::pair<std::string_view,char>, 8> kRelationshipsB
         std::make_pair("101"sv, '5'),
         std::make_pair("110"sv, '6'),
         std::make_pair("111"sv, '7')
-    };
+};
 
 char getOctalNumber(const std::string& binaryNumber)
 {
@@ -75,7 +76,7 @@ std::string crypto::Octal::convertFromBinaryToDesiredBase(const Binary& t_binary
     auto binaryNumber = t_binaryForm.get();
     addLeadingZeros(binaryNumber);
 
-    const auto length = t_binaryForm.get().length();
+    const auto length = binaryNumber.length();
     const auto octalLength = length / 3;
     std::string octalNum {""};
     octalNum.reserve(octalLength);
@@ -131,3 +132,4 @@ crypto::Binary crypto::Octal::getBinaryRepresentation() const
 
     return crypto::Binary{binaryForm};
 }
+

@@ -103,5 +103,6 @@ INSTANTIATE_TEST_SUITE_P(TestOctalNumberRepresentation,
                              TestOctalParametersWhenCreatedFromBinary{crypto::Binary{"110"}, std::string{"6"}},
                              TestOctalParametersWhenCreatedFromBinary{crypto::Binary{"111"}, std::string{"7"}},
                              TestOctalParametersWhenCreatedFromBinary{crypto::Binary{"1000"}, std::string{"10"}},
-                             TestOctalParametersWhenCreatedFromBinary{crypto::Binary{"1111110"}, std::string{"176"}}
+                             TestOctalParametersWhenCreatedFromBinary{crypto::Binary{"1111110"}, std::string{"176"}},
+                             TestOctalParametersWhenCreatedFromBinary{crypto::Binary{"10011110"}, std::string{"236"}}
                          ));

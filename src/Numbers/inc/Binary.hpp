@@ -15,3 +15,4 @@ class Binary
         std::string m_number;
 };
 }//namespace crypto
+

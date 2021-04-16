@@ -25,3 +25,4 @@ private:
     bool doesNumberFitIntoUint() const;
 };
 }//crypto
+
