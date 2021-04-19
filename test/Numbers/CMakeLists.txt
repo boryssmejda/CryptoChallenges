@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.18)
 
     set(SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/TestBase64.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/TestBinary.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/TestDecimal.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/TestOctal.cpp
@@ -19,3 +20,4 @@ cmake_minimum_required(VERSION 3.18)
             CONAN_PKG::spdlog
             CONAN_PKG::gtest
     )
+
