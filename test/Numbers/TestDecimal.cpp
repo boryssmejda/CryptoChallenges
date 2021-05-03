@@ -33,7 +33,6 @@ TEST_P(TestDecimalIncorrectConstructorParameter, whenGivenBadDecimalFormConstruc
     }
     catch(const std::invalid_argument& error)
     {
-        std::cout << error.what() << std::endl;
         EXPECT_STREQ(error.what(), "Invalid Decimal Representation!");
     }
     catch(...)
@@ -48,33 +47,6 @@ INSTANTIATE_TEST_SUITE_P(NumberTestForIncorrectConstructorParameters,
                                          "{", "}", "|", "[", "]", "+", "-", "750a", "a111", "~", "#",
                                          "borys", "1o", "1O", "01", "10000000b", "<1111>", "b101",
                                          "FFF", "099"));
-
-class TestDecimalWhenConstrParamIsOutOfRange : public ::testing::TestWithParam<std::string>
-{};
-
-TEST_P(TestDecimalWhenConstrParamIsOutOfRange, whenTooBigDecimalValueConstrShouldThrow)
-{
-    const std::string& inputParameter = GetParam();
-    try
-    {
-        crypto::Decimal decimal{inputParameter};
-        FAIL() << "Expected std::length_error!";
-    }
-    catch(const std::length_error& error)
-    {
-        EXPECT_STREQ(error.what(), "Too big number to fit into uint64_t!");
-    }
-    catch(...)
-    {
-        FAIL() << "Exception thrown, but expected std::length_error!";
-    }
-}
-
-INSTANTIATE_TEST_SUITE_P(NumberTestForIncorrectConstructorParameters,
-                         TestDecimalWhenConstrParamIsOutOfRange,
-                         testing::Values(
-                            "20000000000000000000",
-                            "123456789012345678900"));
 
 
 class TestDecimalWhenCreatedFromBinary : public ::testing::TestWithParam<crypto::Binary>
@@ -92,36 +64,6 @@ INSTANTIATE_TEST_SUITE_P(NumberTestForCorrectInputParameters,
                             crypto::Binary{"1000"},
                             crypto::Binary{"1"},
                             crypto::Binary{"0"}));
-
-
-class TestDecimalWhenCreatedFromBinaryThatIsTooBig : public ::testing::TestWithParam<crypto::Binary>
-{};
-
-TEST_P(TestDecimalWhenCreatedFromBinaryThatIsTooBig, whenCreatedFromTooBigBinaryConstrShouldThrow)
-{
-    const auto& inputParameter = GetParam();
-    try
-    {
-        crypto::Decimal decimal{inputParameter};
-        FAIL() << "Expected std::length_error!";
-    }
-    catch(const std::length_error& error)
-    {
-        std::cout << error.what() << std::endl;
-        EXPECT_STREQ(error.what(), "Out of range!");
-    }
-    catch(...)
-    {
-        FAIL() << "Exception thrown, but expected std::length_error!";
-    }
-}
-
-INSTANTIATE_TEST_SUITE_P(NumberTestForCorrectInputParameters,
-                        TestDecimalWhenCreatedFromBinaryThatIsTooBig,
-                        testing::Values(
-                            crypto::Binary{"1111111111111111111111111111111111111111111111111111111111111111111111"},
-                            crypto::Binary{"11111111111111111111111111111111111111111111111111111111111111111"}));
-
 
 struct DecimalTestParameters
 {
@@ -147,6 +89,8 @@ INSTANTIATE_TEST_SUITE_P(NumberTestForCorrectInputParameters,
                             DecimalTestParameters{.binaryForm{crypto::Binary{"1"}}, .expectedDecimalForm{"1"}},
                             DecimalTestParameters{.binaryForm{crypto::Binary{"10"}}, .expectedDecimalForm{"2"}},
                             DecimalTestParameters{.binaryForm{crypto::Binary{"11"}}, .expectedDecimalForm{"3"}},
+                            DecimalTestParameters{.binaryForm{crypto::Binary{"100"}}, .expectedDecimalForm{"4"}},
+                            DecimalTestParameters{.binaryForm{crypto::Binary{"1111"}}, .expectedDecimalForm{"15"}},
+                            DecimalTestParameters{.binaryForm{crypto::Binary{"11010"}}, .expectedDecimalForm{"26"}},
                             DecimalTestParameters{.binaryForm{crypto::Binary{"1111111"}}, .expectedDecimalForm{"127"}}
                         ));
-

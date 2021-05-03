@@ -1,8 +1,149 @@
 #include <algorithm>
-#include <array>
-#include <charconv>
 #include "Decimal.hpp"
+#include <ranges>
 #include "spdlog/spdlog.h"
+
+
+namespace
+{
+auto isGreaterThanZero(const std::string& t_decimalNumber) -> bool
+{
+    return (t_decimalNumber != "0");
+}
+
+auto multiplyDecimalNumberByFive(std::string t_decimalNumber) -> std::string
+{
+    std::string multiplicationResult {""};
+    multiplicationResult.reserve(t_decimalNumber.length() + 1);
+    auto carry {0u};
+
+    for (auto& currentDigit: t_decimalNumber | std::views::reverse)
+    {
+        const auto result = static_cast<uint8_t>(currentDigit - '0') * 5 + carry;
+        carry = result / 10;
+        const auto newDigit = (result % 10 + '0');
+        currentDigit = static_cast<char>(newDigit);
+    }
+
+    multiplicationResult.shrink_to_fit();
+    return multiplicationResult;
+}
+
+using ModuloTenRest = char;
+auto divideDecimalNumberByTen(std::string& t_decimalNumber) -> ModuloTenRest
+{
+    const auto lastDigit = t_decimalNumber.back();
+    t_decimalNumber.pop_back();
+
+    return lastDigit;
+}
+
+using RestFromDivisionByTwo = bool;
+auto getRestFromDivisionByTwo(std::string& t_decimalNumber) -> RestFromDivisionByTwo
+{
+    multiplyDecimalNumberByFive(t_decimalNumber);
+    const auto moduloTenRest = divideDecimalNumberByTen(t_decimalNumber);
+
+    bool isDivisibleByTwo = ('0' == moduloTenRest ? true : false);
+    return isDivisibleByTwo;
+}
+
+auto multiplyByTwo(std::string t_decimalNum) -> std::string
+{
+    std::string finalResult;
+    finalResult.reserve(t_decimalNum.length() + 1);
+
+    auto carry {0u};
+    for (auto& digit: t_decimalNum | std::views::reverse)
+    {
+        const auto multiplicationResult = static_cast<uint32_t>(digit - '0') * 2 + carry;
+        carry = multiplicationResult / 10;
+        finalResult += static_cast<char>(multiplicationResult % 10 + '0');
+    }
+
+    if (carry != 0)
+    {
+        finalResult += static_cast<char>(carry + '0');
+    }
+
+    std::ranges::reverse(finalResult);
+    return finalResult;
+}
+
+auto calculatePowerOfTwo(uint32_t exponent) -> std::string
+{
+    if (exponent == 0)
+    {
+        return std::string {"1"};
+    }
+    else
+    {
+        return multiplyByTwo(calculatePowerOfTwo(exponent - 1));
+    }
+}
+
+auto addTwoDecimalNumbers(const std::string& t_firstNumber, const std::string& t_secondNumber) -> std::string
+{
+    const auto additionResultSize = std::max(t_firstNumber.length(), t_secondNumber.length()) + 1;
+    std::string result;
+    result.reserve(additionResultSize);
+
+    auto carry {0u};
+    auto first_i = static_cast<int>(t_firstNumber.length() - 1);
+    auto second_i = static_cast<int>(t_secondNumber.length() - 1);
+    while (first_i >= 0 && second_i >= 0)
+    {
+        const auto firstNumberDigit = t_firstNumber.at(static_cast<size_t>(first_i)) - '0';
+        const auto secondNumberDigit = t_secondNumber.at(static_cast<size_t>(second_i)) - '0';
+
+        auto sum = static_cast<uint32_t>(firstNumberDigit + secondNumberDigit) + carry;
+        carry = sum / 10;
+        sum %= 10;
+
+        result += static_cast<char>(sum + '0');
+        --first_i;
+        --second_i;
+    }
+
+    while (first_i >= 0)
+    {
+        const auto firstNumberDigit = static_cast<uint32_t>(t_firstNumber.at(static_cast<size_t>(first_i)) - '0');
+        const auto sum = firstNumberDigit + carry;
+        result += static_cast<char>(sum + '0');
+        carry = sum / 10;
+    }
+
+    while (second_i >= 0)
+    {
+        const auto secondNumberDigit = static_cast<uint32_t>(t_secondNumber.at(static_cast<size_t>(second_i)) - '0');
+        const auto sum = secondNumberDigit + carry;
+        result += static_cast<char>(sum + '0');
+        carry = sum / 10;
+    }
+
+    if (carry != 0)
+    {
+        result += static_cast<char>(carry + '0');
+    }
+
+    result.shrink_to_fit();
+    std::ranges::reverse(result);
+
+    return result;
+}
+
+auto addPowersOfTwo(const std::vector<std::string>& t_powersOfTwo) -> std::string
+{
+    std::string additionResult {"0"};
+    for (const auto& number: t_powersOfTwo)
+    {
+        additionResult = addTwoDecimalNumbers(additionResult, number);
+    }
+
+    return additionResult;
+}
+
+} //namespace
 
 crypto::Decimal::Decimal(const crypto::Binary& t_binaryRepresentation)
 {
@@ -16,12 +157,6 @@ crypto::Decimal::Decimal(const std::string& t_number)
     {
         SPDLOG_ERROR("{} is not a decimal number!", m_numberRepresentation);
         throw std::invalid_argument("Invalid Decimal Representation!");
-    }
-
-    if (!doesNumberFitIntoUint())
-    {
-        SPDLOG_ERROR("{} is not in a range for uint64_t!", m_numberRepresentation);
-        throw std::length_error("Too big number to fit into uint64_t!");
     }
 }
 
@@ -45,71 +180,47 @@ bool crypto::Decimal::isNumberCorrect() const
 
 crypto::Binary crypto::Decimal::getBinaryRepresentation() const
 {
-    const uint64_t decimalValue = getDecimalRepresentationFromString();
-    return convertFromIntegralToBinary(decimalValue);
-}
-
-uint64_t crypto::Decimal::getDecimalRepresentationFromString() const
-{
-    uint64_t decimalValue {0};
-    if (auto [p, ec] = std::from_chars(m_numberRepresentation.data(),
-        m_numberRepresentation.data() + m_numberRepresentation.size(),
-        decimalValue); ec == std::errc::result_out_of_range)
+    auto decimalForm = m_numberRepresentation;
+    std::string binaryNumber {""};
+    while (isGreaterThanZero(decimalForm))
     {
-        SPDLOG_ERROR("Could not convert to decimal value {}. Out of range!", m_numberRepresentation);
-        throw std::invalid_argument("Out of range!");
+        const auto rest = getRestFromDivisionByTwo(decimalForm);
+        binaryNumber += (rest + '0');
     }
 
-    return decimalValue;
+    std::ranges::reverse(binaryNumber);
+    return crypto::Binary{std::move(binaryNumber)};
 }
 
-crypto::Binary crypto::Decimal::convertFromIntegralToBinary(uint64_t t_number) const
+auto crypto::Decimal::areDigitsBetweenZeroAndNine() const -> bool
 {
-    std::string binaryRepr{20, ' '};
-
-    if (auto [p, ec] = std::to_chars(binaryRepr.data(), binaryRepr.data() + binaryRepr.size(), t_number, 2);
-        ec != std::errc{})
-    {
-        SPDLOG_ERROR("Could not convert {} to binary.", m_numberRepresentation);
-        throw std::invalid_argument("Out of range!");
-    }
-    binaryRepr.shrink_to_fit();
-
-    return Binary{std::move(binaryRepr)};
-}
-
-bool crypto::Decimal::areDigitsBetweenZeroAndNine() const
-{
-    auto predicate = [](char ch){
-        return std::find(kAllowedDigits.begin(), kAllowedDigits.end(), ch) != kAllowedDigits.end();
+    namespace ranges = std::ranges;
+    auto isEveryDigitBetweenZeroAndNine = [](const char ch){
+        return ranges::find(kAllowedDigits, ch) != kAllowedDigits.end();
     };
 
-    if (std::all_of(m_numberRepresentation.begin(), m_numberRepresentation.end(), predicate))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return ranges::all_of(m_numberRepresentation, isEveryDigitBetweenZeroAndNine);
 }
 
 std::string crypto::Decimal::convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const
 {
-    uint64_t decimalVal {0};
-    auto binaryNum = t_binaryForm.get();
-    if (auto [ptr, ec] = std::from_chars(binaryNum.data(),
-        binaryNum.data()+binaryNum.size(), decimalVal, 2); ec == std::errc::result_out_of_range)
+    auto binaryNumber {t_binaryForm.get()};
+    const auto numberOfOnes = std::count(binaryNumber.begin(), binaryNumber.end(), '1');
+    assert (numberOfOnes >= 0);
+
+    std::vector<std::string> calculatedPowersOfTwo;
+    calculatedPowersOfTwo.reserve(static_cast<size_t>(numberOfOnes));
+
+    for (auto exponent {0u}; auto& digit: binaryNumber | std::views::reverse)
     {
-        SPDLOG_ERROR("Could not convert {} to decimal. Out of range!", binaryNum);
-        throw std::length_error("Out of range!");
+        if (digit == '1')
+        {
+            calculatedPowersOfTwo.emplace_back(calculatePowerOfTwo(exponent));
+        }
+        ++exponent;
     }
 
-    std::string decimalForm(20, 0);
-    std::to_chars(decimalForm.data(), decimalForm.data()+decimalForm.size(), decimalVal, 10);
-    decimalForm.erase(std::remove(decimalForm.begin(), decimalForm.end(), 0), decimalForm.end());
-
-    return decimalForm;
+    return addPowersOfTwo(calculatedPowersOfTwo);
 }
 
 std::string crypto::Decimal::getStringRepresentation() const
@@ -117,17 +228,3 @@ std::string crypto::Decimal::getStringRepresentation() const
     return m_numberRepresentation;
 }
 
-bool crypto::Decimal::doesNumberFitIntoUint() const
-{
-    uint64_t decimalVal {0};
-    if (auto [ptr, ec] = std::from_chars(m_numberRepresentation.data(),
-        m_numberRepresentation.data() + m_numberRepresentation.size(), decimalVal, 10);
-        ec == std::errc{})
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
