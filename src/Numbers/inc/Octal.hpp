@@ -18,4 +18,3 @@ private:
     virtual std::string convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const override;
 };
 }//crypto
-

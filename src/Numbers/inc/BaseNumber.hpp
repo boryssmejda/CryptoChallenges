@@ -18,4 +18,3 @@ protected:
     std::string m_numberRepresentation{"0"};
 };
 }//crypto
-
