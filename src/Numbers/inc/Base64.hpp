@@ -5,17 +5,17 @@
 
 namespace crypto
 {
-class Base64 : public crypto::BaseNumber
+class Base64 final: public crypto::BaseNumber
 {
 public:
-    Base64(const std::string& t_base64Number);
-    Base64(const Binary& t_binaryNumber);
+    explicit Base64(const std::string& t_base64Number);
+    explicit Base64(const Binary& t_binaryNumber);
 
-    virtual Binary getBinaryRepresentation() const override;
-    virtual std::string getStringRepresentation() const override;
+    auto getBinaryRepresentation() const -> Binary override;
+    auto getStringRepresentation() const -> std::string override;
 
 private:
-    virtual bool isNumberCorrect() const override;
-    virtual std::string convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const override;
+    auto isNumberCorrect() const -> bool override;
+    auto convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const -> std::string override;
 };
 }//namespace crypto

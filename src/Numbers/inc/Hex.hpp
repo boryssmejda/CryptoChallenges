@@ -6,16 +6,16 @@
 
 namespace crypto
 {
-class Hex final : public BaseNumber
+class Hex final: public BaseNumber
 {
 public:
-    Hex(const Binary& t_binaryNumber);
-    Hex(const std::string& t_numberRepresentation);
+    explicit Hex(const Binary& t_binaryNumber);
+    explicit Hex(const std::string& t_numberRepresentation);
 
-    virtual Binary getBinaryRepresentation() const override;
-    virtual std::string getStringRepresentation() const override;
+    auto getBinaryRepresentation() const -> Binary override;
+    auto getStringRepresentation() const -> std::string override;
 private:
-    virtual bool isNumberCorrect() const override;
-    virtual std::string convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const override;
+    auto isNumberCorrect() const -> bool override;
+    auto convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const -> std::string override;
 };
 }// crypto

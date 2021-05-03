@@ -1,8 +1,9 @@
 #include <algorithm>
-#include "Decimal.hpp"
 #include <ranges>
+
 #include "spdlog/spdlog.h"
 
+#include "Decimal.hpp"
 
 namespace
 {
@@ -178,7 +179,7 @@ bool crypto::Decimal::isNumberCorrect() const
     return true;
 }
 
-crypto::Binary crypto::Decimal::getBinaryRepresentation() const
+auto crypto::Decimal::getBinaryRepresentation() const -> crypto::Binary
 {
     auto decimalForm = m_numberRepresentation;
     std::string binaryNumber {""};
@@ -202,7 +203,7 @@ auto crypto::Decimal::areDigitsBetweenZeroAndNine() const -> bool
     return ranges::all_of(m_numberRepresentation, isEveryDigitBetweenZeroAndNine);
 }
 
-std::string crypto::Decimal::convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const
+auto crypto::Decimal::convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const -> std::string
 {
     auto binaryNumber {t_binaryForm.get()};
     const auto numberOfOnes = std::count(binaryNumber.begin(), binaryNumber.end(), '1');
@@ -223,7 +224,7 @@ std::string crypto::Decimal::convertFromBinaryToDesiredBase(const Binary& t_bina
     return addPowersOfTwo(calculatedPowersOfTwo);
 }
 
-std::string crypto::Decimal::getStringRepresentation() const
+auto crypto::Decimal::getStringRepresentation() const -> std::string
 {
     return m_numberRepresentation;
 }

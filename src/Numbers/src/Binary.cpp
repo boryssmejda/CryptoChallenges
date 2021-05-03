@@ -1,9 +1,10 @@
-#include "Binary.hpp"
+#include <algorithm>
+#include <stdexcept>
 
 #include "spdlog/spdlog.h"
 
-#include <algorithm>
-#include <stdexcept>
+#include "Binary.hpp"
+
 
 crypto::Binary::Binary(std::string t_binaryNumberRepresentation):
     m_number{std::move(t_binaryNumberRepresentation)}
@@ -15,12 +16,12 @@ crypto::Binary::Binary(std::string t_binaryNumberRepresentation):
     }
 }
 
-[[nodiscard]] std::string crypto::Binary::get() const
+auto crypto::Binary::get() const -> std::string
 {
     return m_number;
 }
 
-[[nodiscard]] bool crypto::Binary::isNumberCorrect() const
+auto crypto::Binary::isNumberCorrect() const -> bool
 {
     if(!std::ranges::all_of(m_number.cbegin(), m_number.cend(),
             [](char ch){return (ch == '0' || ch == '1');}))
@@ -35,3 +36,4 @@ crypto::Binary::Binary(std::string t_binaryNumberRepresentation):
 
     return true;
 }
+

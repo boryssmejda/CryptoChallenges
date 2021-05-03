@@ -79,7 +79,7 @@ static constexpr std::array kBase64BinaryRelation {
     std::make_pair('/', "111111"sv)
 };
 
-void addLeadingZeros(std::string& t_binaryNumber)
+auto addLeadingZeros(std::string& t_binaryNumber) -> void
 {
     while (t_binaryNumber.length() % 6 != 0)
     {
@@ -87,7 +87,7 @@ void addLeadingZeros(std::string& t_binaryNumber)
     }
 }
 
-char getBase64Digit(std::string_view sixBinaryDigits)
+auto getBase64Digit(std::string_view sixBinaryDigits) -> char
 {
     const auto element = std::ranges::find_if(kBase64BinaryRelation, [&sixBinaryDigits](const auto& p){
         const auto& [base64, binary] = p;
@@ -100,7 +100,7 @@ char getBase64Digit(std::string_view sixBinaryDigits)
     return base64;
 }
 
-std::string_view getSixBinaryDigitsForOneBase64(char t_base64Digit)
+auto getSixBinaryDigitsForOneBase64(char t_base64Digit) -> std::string_view
 {
     auto element = std::ranges::find_if(kBase64BinaryRelation, [t_base64Digit](const auto& p){
         const auto& [base64, binary] = p;
@@ -128,7 +128,7 @@ crypto::Base64::Base64(const Binary& t_binaryRepresentation)
     m_numberRepresentation = convertFromBinaryToDesiredBase(t_binaryRepresentation);
 }
 
-crypto::Binary crypto::Base64::getBinaryRepresentation() const
+auto crypto::Base64::getBinaryRepresentation() const -> crypto::Binary
 {
     std::string binaryForm{""};
     binaryForm.reserve(m_numberRepresentation.length()*6);
@@ -140,12 +140,12 @@ crypto::Binary crypto::Base64::getBinaryRepresentation() const
     return crypto::Binary{binaryForm};
 }
 
-std::string crypto::Base64::getStringRepresentation() const
+auto crypto::Base64::getStringRepresentation() const -> std::string
 {
     return m_numberRepresentation;
 }
 
-bool crypto::Base64::isNumberCorrect() const
+auto crypto::Base64::isNumberCorrect() const -> bool
 {
     auto isEveryDigitBetweenZeroAndSixtyThree = [](const char ch){
         auto isDigitBase64 = [&ch](const auto& p){
@@ -159,7 +159,7 @@ bool crypto::Base64::isNumberCorrect() const
     return std::ranges::all_of(m_numberRepresentation, isEveryDigitBetweenZeroAndSixtyThree);
 }
 
-std::string crypto::Base64::convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const
+auto crypto::Base64::convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const -> std::string
 {
     auto binaryNumber = t_binaryForm.get();
     addLeadingZeros(binaryNumber);

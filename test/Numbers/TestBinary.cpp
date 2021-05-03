@@ -34,7 +34,6 @@ INSTANTIATE_TEST_SUITE_P(NumberTestForCorrectInputParameters,
      }
      catch(const std::invalid_argument& error)
      {
-         std::cout << error.what() << std::endl;
          EXPECT_STREQ(error.what(), "Invalid Binary Representation");
      }
      catch(...)

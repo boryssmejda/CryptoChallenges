@@ -6,12 +6,12 @@ namespace crypto
 {
 class Binary
 {
-    public:
-        explicit Binary(std::string t_binaryNumberRepresentation);
-        [[nodiscard]] std::string get() const;
+public:
+    explicit Binary(std::string t_binaryNumberRepresentation);
+    auto get() const -> std::string;
 
-    private:
-        [[nodiscard]] bool isNumberCorrect() const;
-        std::string m_number;
+private:
+    auto isNumberCorrect() const -> bool;
+    std::string m_number;
 };
 }//namespace crypto

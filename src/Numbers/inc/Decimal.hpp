@@ -6,22 +6,19 @@
 
 namespace crypto
 {
-class Decimal : public BaseNumber
+class Decimal final: public BaseNumber
 {
 public:
-    Decimal(const crypto::Binary& t_binaryRepresentation);
-    Decimal(const std::string& t_number);
+    explicit Decimal(const crypto::Binary& t_binaryRepresentation);
+    explicit Decimal(const std::string& t_number);
 
-    virtual std::string getStringRepresentation() const override;
-    virtual Binary getBinaryRepresentation() const override;
+    auto getStringRepresentation() const -> std::string override;
+    auto getBinaryRepresentation() const -> Binary override;
 
     static constexpr std::array<char, 10> kAllowedDigits{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 private:
-    virtual bool isNumberCorrect() const override;
-    virtual std::string convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const override;
-    bool areDigitsBetweenZeroAndNine() const;
-    uint64_t getDecimalRepresentationFromString() const;
-    Binary convertFromIntegralToBinary(uint64_t t_number) const;
-    bool doesNumberFitIntoUint() const;
+    auto isNumberCorrect() const -> bool override;
+    auto convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const -> std::string override;
+    auto areDigitsBetweenZeroAndNine() const -> bool;
 };
 }//crypto

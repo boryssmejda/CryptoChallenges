@@ -10,17 +10,17 @@ namespace
 using namespace std::literals;
 static constexpr std::array<std::pair<std::string_view,char>, 8> kRelationshipsBetweenBinaryAndOctalElements
 {
-        std::make_pair("000"sv, '0'),
-        std::make_pair("001"sv, '1'),
-        std::make_pair("010"sv, '2'),
-        std::make_pair("011"sv, '3'),
-        std::make_pair("100"sv, '4'),
-        std::make_pair("101"sv, '5'),
-        std::make_pair("110"sv, '6'),
-        std::make_pair("111"sv, '7')
+    std::make_pair("000"sv, '0'),
+    std::make_pair("001"sv, '1'),
+    std::make_pair("010"sv, '2'),
+    std::make_pair("011"sv, '3'),
+    std::make_pair("100"sv, '4'),
+    std::make_pair("101"sv, '5'),
+    std::make_pair("110"sv, '6'),
+    std::make_pair("111"sv, '7')
 };
 
-char getOctalNumber(const std::string& binaryNumber)
+auto getOctalNumber(const std::string& binaryNumber) -> char
 {
     auto areDigitsEqual = [&binaryNumber](const auto& p){
         const auto& [binary, octal] = p;
@@ -33,7 +33,7 @@ char getOctalNumber(const std::string& binaryNumber)
     return octal;
 }
 
-std::string getBinaryTripleForGivenOctalDigit(char t_octalDigit)
+auto getBinaryTripleForGivenOctalDigit(char t_octalDigit) -> std::string
 {
     auto predicate = [t_octalDigit](const auto& p){
         const auto& [binary, octal] = p;
@@ -46,7 +46,7 @@ std::string getBinaryTripleForGivenOctalDigit(char t_octalDigit)
     return std::string{binary};
 }
 
-void addLeadingZeros(std::string& t_binaryNumber)
+auto addLeadingZeros(std::string& t_binaryNumber) -> void
 {
     while (t_binaryNumber.length() % 3 != 0)
     {
@@ -71,7 +71,7 @@ crypto::Octal::Octal(const crypto::Binary& t_binaryRepresentation)
     m_numberRepresentation = convertFromBinaryToDesiredBase(t_binaryRepresentation);
 }
 
-std::string crypto::Octal::convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const
+auto crypto::Octal::convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const -> std::string
 {
     auto binaryNumber = t_binaryForm.get();
     addLeadingZeros(binaryNumber);
@@ -90,7 +90,7 @@ std::string crypto::Octal::convertFromBinaryToDesiredBase(const Binary& t_binary
     return octalNum;
 }
 
-bool crypto::Octal::isNumberCorrect() const
+auto crypto::Octal::isNumberCorrect() const -> bool
 {
     auto isEveryDigitBetweenZeroAndSeven = [](const char ch){
         auto isDigitDecimal = [&ch](const auto& p){
@@ -116,12 +116,12 @@ bool crypto::Octal::isNumberCorrect() const
     }
 }
 
-std::string crypto::Octal::getStringRepresentation() const
+auto crypto::Octal::getStringRepresentation() const -> std::string
 {
     return m_numberRepresentation;
 }
 
-crypto::Binary crypto::Octal::getBinaryRepresentation() const
+auto crypto::Octal::getBinaryRepresentation() const -> crypto::Binary
 {
     std::string binaryForm{""};
     binaryForm.reserve(m_numberRepresentation.length()*3);

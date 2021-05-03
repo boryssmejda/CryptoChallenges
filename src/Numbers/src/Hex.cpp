@@ -3,35 +3,34 @@
 #include <string>
 #include <string_view>
 
-#include "Hex.hpp"
-
 #include "spdlog/spdlog.h"
 
+#include "Hex.hpp"
 
 namespace
 {
 using namespace std::literals;
 static constexpr std::array kHexBinaryRelation
 {
-        std::make_pair("0000"sv, '0'),
-        std::make_pair("0001"sv, '1'),
-        std::make_pair("0010"sv, '2'),
-        std::make_pair("0011"sv, '3'),
-        std::make_pair("0100"sv, '4'),
-        std::make_pair("0101"sv, '5'),
-        std::make_pair("0110"sv, '6'),
-        std::make_pair("0111"sv, '7'),
-        std::make_pair("1000"sv, '8'),
-        std::make_pair("1001"sv, '9'),
-        std::make_pair("1010"sv, 'a'),
-        std::make_pair("1011"sv, 'b'),
-        std::make_pair("1100"sv, 'c'),
-        std::make_pair("1101"sv, 'd'),
-        std::make_pair("1110"sv, 'e'),
-        std::make_pair("1111"sv, 'f'),
+    std::make_pair("0000"sv, '0'),
+    std::make_pair("0001"sv, '1'),
+    std::make_pair("0010"sv, '2'),
+    std::make_pair("0011"sv, '3'),
+    std::make_pair("0100"sv, '4'),
+    std::make_pair("0101"sv, '5'),
+    std::make_pair("0110"sv, '6'),
+    std::make_pair("0111"sv, '7'),
+    std::make_pair("1000"sv, '8'),
+    std::make_pair("1001"sv, '9'),
+    std::make_pair("1010"sv, 'a'),
+    std::make_pair("1011"sv, 'b'),
+    std::make_pair("1100"sv, 'c'),
+    std::make_pair("1101"sv, 'd'),
+    std::make_pair("1110"sv, 'e'),
+    std::make_pair("1111"sv, 'f'),
 };
 
-std::string getFourBinaryDigitsForOneHex(const char t_hexDigit)
+auto getFourBinaryDigitsForOneHex(const char t_hexDigit) -> std::string
 {
     auto predicate = [t_hexDigit](const auto& p){
         const auto& [binary, hex] = p;
@@ -44,7 +43,7 @@ std::string getFourBinaryDigitsForOneHex(const char t_hexDigit)
     return std::string{binary};
 }
 
-void addLeadingZeros(std::string& t_binaryNumber)
+auto addLeadingZeros(std::string& t_binaryNumber) -> void
 {
     while (t_binaryNumber.length() % 4 != 0)
     {
@@ -52,7 +51,7 @@ void addLeadingZeros(std::string& t_binaryNumber)
     }
 }
 
-char getHexNumber(const std::string& t_binaryDigits)
+auto getHexNumber(const std::string& t_binaryDigits) -> char
 {
     auto areDigitsEqual = [&t_binaryDigits](const auto& p){
         const auto& [binary, hex] = p;
@@ -72,7 +71,7 @@ crypto::Hex::Hex(const crypto::Binary& t_binaryNumber)
     m_numberRepresentation = convertFromBinaryToDesiredBase(t_binaryNumber);
 }
 
-std::string crypto::Hex::convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const
+auto crypto::Hex::convertFromBinaryToDesiredBase(const Binary& t_binaryForm) const -> std::string
 {
     auto binaryNumber = t_binaryForm.get();
     addLeadingZeros(binaryNumber);
@@ -101,12 +100,12 @@ crypto::Hex::Hex(const std::string& t_numberRepresentation)
     }
 }
 
-std::string crypto::Hex::getStringRepresentation() const
+auto crypto::Hex::getStringRepresentation() const -> std::string
 {
     return m_numberRepresentation;
 }
 
-bool crypto::Hex::isNumberCorrect() const
+auto crypto::Hex::isNumberCorrect() const -> bool
 {
     auto isEveryDigitBetweenZeroAndHexF = [](const char ch){
         auto isDigitDecimal = [&ch](const auto& p){
@@ -130,9 +129,9 @@ bool crypto::Hex::isNumberCorrect() const
     {
         return true;
     }
-    return true;
 }
-crypto::Binary crypto::Hex::getBinaryRepresentation() const
+
+auto crypto::Hex::getBinaryRepresentation() const -> crypto::Binary
 {
     std::string binaryForm {""};
     binaryForm.reserve(m_numberRepresentation.length()*4);
@@ -142,3 +141,4 @@ crypto::Binary crypto::Hex::getBinaryRepresentation() const
 
     return crypto::Binary{binaryForm};
 }
+

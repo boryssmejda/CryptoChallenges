@@ -37,8 +37,7 @@ TEST_P(TestHexConstructorForIncorrectParams, givenIncorrectHexFormConstructorSho
     }
     catch(const std::invalid_argument& error)
     {
-        std::cout << error.what() << std::endl;
-        EXPECT_STREQ(error.what(), "Invalid Hex Representation!");
+        EXPECT_STREQ(error.what(), "Invalid Hexadecimal Representation!");
     }
     catch(...)
     {
@@ -47,10 +46,10 @@ TEST_P(TestHexConstructorForIncorrectParams, givenIncorrectHexFormConstructorSho
 }
 
 INSTANTIATE_TEST_SUITE_P(NumberTestForIncorrectConstructorParameters,
-                         TestOctalConstructorForIncorrectParams,
+                         TestHexConstructorForIncorrectParams,
                          testing::Values("o", "O", "-", "/", ":", " ", "$", "^", "*", "(", ")",
                                          "{", "}", "|", "[", "]", "+", "-", "~", "#",
-                                         "borys", "1o", "1O", "01", "<1111>", "b101",
+                                         "borys", "1o", "1O", "01", "<1111>", "g101",
                                          "FFF", "099", "xxx", "abx", "abcdefgh"
 ));
 

@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.18)
         ${CMAKE_CURRENT_SOURCE_DIR}/TestBase64.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/TestBinary.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/TestDecimal.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/TestHex.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/TestOctal.cpp
     )
 

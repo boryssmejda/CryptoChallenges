@@ -33,7 +33,6 @@ TEST_P(TestOctalConstructorForIncorrectParams, givenIncorrectOctalFormConstructo
     }
     catch(const std::invalid_argument& error)
     {
-        std::cout << error.what() << std::endl;
         EXPECT_STREQ(error.what(), "Invalid Octal Representation!");
     }
     catch(...)
