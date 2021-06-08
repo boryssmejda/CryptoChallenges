@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.18)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 set(CMAKE_POSITION_INDEPENDENT_CODE "ON")
 
 project(CryptoChallenges CXX)
@@ -18,9 +17,6 @@ message(STATUS "RUN_UT_VALGRIND = ${RUN_UT_VALGRIND}")
 
     include(${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
     conan_basic_setup(TARGETS)
-
-    include(cmake/Git.cmake)
-    git_init_submodules()
 
     include(cmake/ClangTidy.cmake)
 
