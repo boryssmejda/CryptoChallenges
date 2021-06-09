@@ -68,8 +68,6 @@ class CMakeConfigurationCommandBuilder:
                               "-G", generator,
                               "-S", pp.PROJECT_ROOT,
                               "-B", pp.BUILD_DIR,
-                              "-D", f"OPENSSL_ROOT_DIR={pp.PROJECT_ROOT}/deps/OpenSSL/lib",
-                              "-D", f"CMAKE_PREFIX_PATH={pp.PROJECT_ROOT}/deps",
                               "-D", f"CMAKE_INSTALL_PREFIX={pp.INSTALL_DIR}"]
 
         self.SHOULD_BUILD_TESTS = None
